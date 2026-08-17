@@ -27,12 +27,12 @@ export default function ClosingHarian() {
     try {
       setLoading(true);
       // Data transaksi tetap ditarik hanya untuk menghitung total yang belum di-closing
-      const resTx = await axios.get(`\${import.meta.env.VITE_API_BASE_URL}/transaksi?date=${date}`, axiosConfig);
+      const resTx = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/transaksi?date=${date}`, axiosConfig);
       const dataTx = Array.isArray(resTx.data.data) ? resTx.data.data : resTx.data.data?.transactions || [];
       setTransactions(dataTx);
 
       try {
-        const resClosing = await axios.get(`\${import.meta.env.VITE_API_BASE_URL}/closing_harian?date=${date}`, axiosConfig);
+        const resClosing = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/closing_harian?date=${date}`, axiosConfig);
         const actualData = resClosing.data?.data || resClosing.data;
         setClosingData(actualData);
         setIsClosed(true);
@@ -40,6 +40,11 @@ export default function ClosingHarian() {
         if (err.response?.status === 404) {
           setClosingData(null);
           setIsClosed(false);
+        } else if (err.response?.status === 403) {
+          // PERBAIKAN LOGIKA: Jika 403 (Akses Laporan Ditolak untuk Kasir),
+          // asumsikan closing sudah ada (karena tidak 404), agar tombol Reopen tetap muncul.
+          setClosingData(null); // Kasir tetap tidak melihat datanya
+          setIsClosed(true); // Tapi state diubah ke true agar tombol Reopen muncul
         }
       }
     } catch (error) {
@@ -75,8 +80,11 @@ export default function ClosingHarian() {
     if (window.confirm("Buka kembali closing hari ini? Transaksi akan diizinkan untuk diubah lagi.")) {
       try {
         setIsSubmitting(true);
-        await axios.delete(`\${import.meta.env.VITE_API_BASE_URL}/closing_harian?date=${date}`, axiosConfig);
+        await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/closing_harian?date=${date}`, axiosConfig);
         alert("Closing berhasil dibuka kembali!");
+
+        setIsClosed(false);
+        setClosingData(null);
         fetchData();
       } catch (error) {
         alert("Gagal membuka kembali closing. Pastikan API backend sudah mendukung fitur ini.");
@@ -143,7 +151,7 @@ export default function ClosingHarian() {
                 <br />
                 Memuat data...
               </div>
-            ) : (!isClosed || !closingData) ? (
+            ) : !isClosed || !closingData ? (
               /* STATE: BELUM CLOSING */
               <div className="text-center py-4">
                 <div className="p-4 text-muted">
