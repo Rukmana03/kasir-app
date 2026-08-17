@@ -1,0 +1,53 @@
+name: Auto Deploy POS Waroeng Bakmi
+
+# Robot akan bekerja setiap kali ada kode baru yang di-push ke cabang 'main'
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  # TUGAS 1: DEPLOY FRONTEND
+  deploy-frontend:
+    name: Build & Deploy Frontend (Vite)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mengambil Source Code
+        uses: actions/checkout@v4
+
+      - name: Menyiapkan Lingkungan Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Menginstal Dependencies & Build Vite
+        run: |
+          cd fe
+          npm install
+          npm run build
+
+      - name: Mengirim ke cPanel (public_html)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME_FE }}
+          password: ${{ secrets.FTP_PASSWORD_FE }}
+          local-dir: ./fe/dist/
+          server-dir: ./
+
+  # TUGAS 2: DEPLOY BACKEND
+  deploy-backend:
+    name: Deploy Backend (Express)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mengambil Source Code
+        uses: actions/checkout@v4
+
+      - name: Mengirim ke cPanel (Folder Backend)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME_BE }}
+          password: ${{ secrets.FTP_PASSWORD_BE }}
+          local-dir: ./be/
+          server-dir: ./
