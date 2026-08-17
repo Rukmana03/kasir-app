@@ -17,9 +17,11 @@ jobs:
       - name: Menyiapkan Lingkungan Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24' # <-- DIPERBARUI KE VERSI 24
+          node-version: "24" # <-- DIPERBARUI KE VERSI 24
 
       - name: Menginstal Dependencies & Build Vite
+        env:
+          VITE_API_URL: https://ahmeng.my.id/api
         run: |
           cd fe
           npm install
@@ -34,7 +36,7 @@ jobs:
           local-dir: ./fe/dist/
           server-dir: ./
           protocol: ftp # <-- TAMBAHAN: Menggunakan protokol FTP standar
-          port: 21      # <-- TAMBAHAN: Menentukan port secara eksplisit
+          port: 21 # <-- TAMBAHAN: Menentukan port secara eksplisit
 
   # TUGAS 2: DEPLOY BACKEND
   deploy-backend:
@@ -53,4 +55,4 @@ jobs:
           local-dir: ./be/
           server-dir: ./
           protocol: ftp # <-- TAMBAHAN: Menggunakan protokol FTP standar
-          port: 21      # <-- TAMBAHAN: Menentukan port secara eksplisit
+          port: 21 # <-- TAMBAHAN: Menentukan port secara eksplisit
