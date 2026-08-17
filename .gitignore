@@ -1,0 +1,8 @@
+# Blokir dari folder Backend
+be/node_modules/
+be/.env
+
+# Blokir dari folder Frontend
+fe/node_modules/
+fe/dist/
+fe/.env

@@ -1,0 +1,144 @@
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x", "rhel-openssl-1.0.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id_user Int    @id @default(autoincrement())
+  nama        String
+  username    String @unique
+  password    String
+  role        String
+
+  transaksi       Transaksi[]
+  closing_harian  ClosingHarian[]
+  penggunaan_stok PenggunaanStok[]
+  belanja_bahan   BelanjaBahan[]
+}
+
+model Meja {
+  id_meja     Int    @id @default(autoincrement())
+  nomor_meja  String @unique
+  status_meja String
+
+  transaksi Transaksi[]
+}
+
+model Menu {
+  id_menu     Int     @id @default(autoincrement())
+  nama_menu   String
+  kategori    String
+  harga       Decimal @db.Decimal(10, 2)
+  status_menu String
+
+  detail_trans DetailTransaksi[]
+  komposisi    KomposisiMenu[]
+}
+
+model Transaksi {
+  id_transaksi      Int      @id @default(autoincrement())
+  tanggal           DateTime @default(now())
+  jenis_transaksi   String
+  metode_pembayaran String
+  total_bayar       Decimal  @db.Decimal(12, 2)
+  status            String
+
+  id_user Int
+  user    User @relation(fields: [id_user], references: [id_user])
+  id_meja Int?
+  meja    Meja? @relation(fields: [id_meja], references: [id_meja])
+  id_closing Int?
+  closing    ClosingHarian? @relation(fields: [id_closing], references: [id_closing])
+  detail_transaksi DetailTransaksi[]
+}
+
+model DetailTransaksi {
+  id_detail Int     @id @default(autoincrement())
+  jumlah    Int
+  harga     Decimal @db.Decimal(10, 2)
+  subtotal  Decimal @db.Decimal(12, 2)
+
+  id_transaksi Int
+  transaksi    Transaksi @relation(fields: [id_transaksi], references: [id_transaksi], onDelete: Cascade)
+  id_menu Int
+  menu    Menu @relation(fields: [id_menu], references: [id_menu], onDelete: Restrict)
+}
+
+model KomposisiMenu {
+  id_komposisi Int   @id @default(autoincrement())
+  jumlah_butuh Float
+
+  id_menu  Int
+  menu     Menu  @relation(fields: [id_menu], references: [id_menu], onDelete: Cascade)
+  
+  id_bahan Int
+  bahan    Bahan @relation(fields: [id_bahan], references: [id_bahan], onDelete: Restrict)
+}
+
+model Bahan {
+  id_bahan    Int    @id @default(autoincrement())
+  nama_bahan  String
+  jenis_bahan String
+  satuan      String
+  stok        Int
+
+  penggunaan_stok     PenggunaanStok[]
+  belanja_bahan       BelanjaBahan[]
+  rekomendasi_belanja RekomendasiBelanja[]
+  komposisi           KomposisiMenu[]
+}
+
+model PenggunaanStok {
+  id_penggunaan      Int      @id @default(autoincrement())
+  tanggal_penggunaan DateTime @default(now())
+  jumlah_pakai       Int
+  keterangan         String
+
+  id_user Int
+  user    User @relation(fields: [id_user], references: [id_user])
+  id_bahan Int
+  bahan    Bahan @relation(fields: [id_bahan], references: [id_bahan])
+}
+
+model BelanjaBahan {
+  id_belanja      Int      @id @default(autoincrement())
+  tanggal_belanja DateTime @default(now())
+  jumlah_belanja  Int
+  harga_satuan    Decimal  @db.Decimal(10, 2)
+  total_belanja   Decimal  @db.Decimal(12, 2)
+
+  id_user Int
+  user    User @relation(fields: [id_user], references: [id_user])
+  id_bahan Int
+  bahan    Bahan @relation(fields: [id_bahan], references: [id_bahan])
+  id_closing Int?
+  closing    ClosingHarian? @relation(fields: [id_closing], references: [id_closing])
+}
+
+model RekomendasiBelanja {
+  id_rekomendasi Int      @id @default(autoincrement())
+  tanggal        DateTime @default(now())
+
+  id_bahan Int
+  bahan    Bahan @relation(fields: [id_bahan], references: [id_bahan])
+}
+
+model ClosingHarian {
+  id_closing       Int      @id @default(autoincrement())
+  tanggal_closing  DateTime @default(now())
+  jumlah_transaksi Int
+  pemasukan        Decimal  @db.Decimal(12, 2)
+  belanja          Decimal  @db.Decimal(12, 2)
+  total            Decimal  @db.Decimal(12, 2)
+
+  id_user Int
+  user    User @relation(fields: [id_user], references: [id_user])
+
+  transaksi     Transaksi[]
+  belanja_bahan BelanjaBahan[]
+}
