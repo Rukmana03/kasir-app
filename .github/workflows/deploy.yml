@@ -21,7 +21,7 @@ jobs:
 
       - name: Menginstal Dependencies & Build Vite
         env:
-          VITE_API_URL: https://ahmeng.my.id/api
+          VITE_API_URL: https://api.ahmeng.my.id/api
         run: |
           cd fe
           npm install
