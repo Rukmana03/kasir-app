@@ -1,6 +1,5 @@
 name: Auto Deploy POS Waroeng Bakmi
 
-# Robot akan bekerja setiap kali ada kode baru yang di-push ke cabang 'main'
 on:
   push:
     branches:
@@ -18,7 +17,7 @@ jobs:
       - name: Menyiapkan Lingkungan Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: '24' # <-- DIPERBARUI KE VERSI 24
 
       - name: Menginstal Dependencies & Build Vite
         run: |
@@ -34,6 +33,8 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD_FE }}
           local-dir: ./fe/dist/
           server-dir: ./
+          protocol: ftp # <-- TAMBAHAN: Menggunakan protokol FTP standar
+          port: 21      # <-- TAMBAHAN: Menentukan port secara eksplisit
 
   # TUGAS 2: DEPLOY BACKEND
   deploy-backend:
@@ -51,3 +52,5 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD_BE }}
           local-dir: ./be/
           server-dir: ./
+          protocol: ftp # <-- TAMBAHAN: Menggunakan protokol FTP standar
+          port: 21      # <-- TAMBAHAN: Menentukan port secara eksplisit
