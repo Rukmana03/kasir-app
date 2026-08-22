@@ -20,7 +20,7 @@ const loginUser = async (username, password) => {
 
   // Cek apakah password di DB sudah di-hash (cirinya panjang 60 karakter & diawali $2b$)
   if (user.password.startsWith("$2b$")) {
-    isPasswordValid = bcrypt.compareSync(password, user.password);
+    isPasswordValid = await bcrypt.compare(password, user.password);
   } else {
     // Fallback untuk password dummy teks biasa (misal: "password123")
     isPasswordValid = password === user.password;
