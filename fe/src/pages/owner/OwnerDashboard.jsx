@@ -27,7 +27,7 @@ export default function OwnerDashboard() {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`\${import.meta.env.VITE_API_BASE_URL}/dashboard?period=${period}`, axiosConfig);
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/dashboard?period=${period}`, axiosConfig);
       const data = res.data.data || res.data;
 
       setDashboardData({
