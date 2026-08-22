@@ -84,7 +84,7 @@ export default function KasirConfirm() {
 
       if (orderData.id_meja && orderData.tipePesanan !== 'Takeaway') {
         try {
-          await axios.patch(`\${import.meta.env.VITE_API_BASE_URL}/meja/${orderData.id_meja}/status`, {
+          await axios.patch(`${import.meta.env.VITE_API_BASE_URL}/meja/${orderData.id_meja}/status`, {
             status_meja: 'Terisi'
           }, {
             headers: { Authorization: `Bearer ${token}` }

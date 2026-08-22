@@ -72,7 +72,7 @@ export default function KasirDashboard() {
     
     if(window.confirm(`Yakin ingin mengosongkan ${namaMejaTampil}?`)) {
        try {
-         await axios.patch(`\${import.meta.env.VITE_API_BASE_URL}/meja/${meja.id_meja}/status`, {
+         await axios.patch(`${import.meta.env.VITE_API_BASE_URL}/meja/${meja.id_meja}/status`, {
            status_meja: 'Tersedia'
          }, axiosConfig);
          
