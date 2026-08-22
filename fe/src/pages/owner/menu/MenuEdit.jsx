@@ -18,7 +18,7 @@ export default function MenuEdit() {
   useEffect(() => {
     const fetchMenu = async () => {
       try {
-        const res = await axios.get(`\${import.meta.env.VITE_API_BASE_URL}/menu/${id}`, config);
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/menu/${id}`, config);
         const data = res.data.data;
         setFormData({
           nama_menu: data.nama_menu,
@@ -39,7 +39,7 @@ export default function MenuEdit() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await axios.put(`\${import.meta.env.VITE_API_BASE_URL}/menu/${id}`, {
+      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/menu/${id}`, {
         ...formData,
         harga: Number(formData.harga)
       }, config);
