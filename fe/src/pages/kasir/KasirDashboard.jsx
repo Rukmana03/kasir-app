@@ -212,7 +212,7 @@ export default function KasirDashboard() {
       {!loading && !checkingClosing && isClosedToday && (
         <div className="card border-0 shadow-sm rounded-4 mt-4">
           <div className="card-body py-5 text-center fade-in">
-            <div className="icon-circle bg-danger-subtle text-danger mx-auto mb-4" style={{ width: "80px", height: "80px", fontSize: "32px" }}>
+            <div className="icon-circle text-danger mx-auto mb-4" style={{ width: "60px", height: "60px", fontSize: "50px" }}>
               <i className="fas fa-lock"></i>
             </div>
             <h2 className="h4 fw-bold text-dark mb-2">Kasir Telah Ditutup</h2>
