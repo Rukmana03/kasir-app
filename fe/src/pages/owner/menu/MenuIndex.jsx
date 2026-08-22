@@ -147,7 +147,7 @@ export default function MenuIndex() {
       );
 
       // Refresh list resep di dalam modal
-      const res = await axios.get(`\${import.meta.env.VITE_API_BASE_URL}/menu/${activeMenuResep.id_menu}/resep`, axiosConfig);
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/menu/${activeMenuResep.id_menu}/resep`, axiosConfig);
       setResepList(res.data.data || []);
       setFormResep({ id_bahan: "", jumlah_butuh: "" });
     } catch (error) {
@@ -160,7 +160,7 @@ export default function MenuIndex() {
   const handleHapusResep = async (id_komposisi) => {
     try {
       await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/menu/resep/${id_komposisi}`, axiosConfig);
-      const res = await axios.get(`\${import.meta.env.VITE_API_BASE_URL}/menu/${activeMenuResep.id_menu}/resep`, axiosConfig);
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/menu/${activeMenuResep.id_menu}/resep`, axiosConfig);
       setResepList(res.data.data || []);
     } catch (error) {
       showAlert("danger", "Gagal menghapus bahan dari resep.");
