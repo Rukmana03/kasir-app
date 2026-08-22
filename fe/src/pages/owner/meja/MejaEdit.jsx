@@ -18,7 +18,7 @@ export default function MejaEdit() {
   useEffect(() => {
     const fetchMeja = async () => {
       try {
-        const res = await axios.get(`\${import.meta.env.VITE_API_BASE_URL}/meja/${id}`, config);
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/meja/${id}`, config);
         setNamaMeja(res.data.data.nomor_meja);
       } catch (err) {
         setErrorMessages(['Gagal memuat data meja.']);
@@ -41,7 +41,7 @@ export default function MejaEdit() {
 
     setIsLoading(true);
     try {
-      await axios.put(`\${import.meta.env.VITE_API_BASE_URL}/meja/${id}`, {
+      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/meja/${id}`, {
         nomor_meja: trimmedName
       }, config);
       navigate('/meja');
